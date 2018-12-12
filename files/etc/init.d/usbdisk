@@ -1,0 +1,16 @@
+#!/bin/sh /etc/rc.common
+START=99
+STOP=10
+start() {
+	mount -t ext4 -o noatime /dev/sda /mnt/mmc
+}
+stop()
+{
+	sync
+	umount /dev/sda
+}
+restart()
+{
+	stop
+	start
+}

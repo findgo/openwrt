@@ -1,0 +1,16 @@
+#!/bin/sh /etc/rc.common
+START=80
+STOP=10
+
+start() {
+	ser2net -c /etc/ser2net.conf
+}
+     
+stop(){
+	killall ser2net_tty
+}
+restart()
+{
+	stop
+	start
+}
