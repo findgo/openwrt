@@ -92,7 +92,7 @@ config_unset() {
 # config_get <section> <option>
 config_get() {
 	case "$3" in
-		"") eval echo "\${CONFIG_${1}_${2}:-\${4}}";;
+		"") eval echo "\"\${CONFIG_${1}_${2}:-\${4}}\"";;
 		*)  eval export ${NO_EXPORT:+-n} -- "${1}=\${CONFIG_${2}_${3}:-\${4}}";;
 	esac
 }
@@ -234,10 +234,9 @@ default_postinst() {
 	if [ -z "$root" ] && grep -q -s "^/etc/uci-defaults/" "/usr/lib/opkg/info/${pkgname}.list"; then
 		. /lib/functions/system.sh
 		[ -d /tmp/.uci ] || mkdir -p /tmp/.uci
-		for i in $(sed -ne 's!^/etc/uci-defaults/!!p' "/usr/lib/opkg/info/${pkgname}.list"); do (
-			cd /etc/uci-defaults
-			[ -f "$i" ] && . ./"$i" && rm -f "$i"
-		) done
+		for i in $(grep -s "^/etc/uci-defaults/" "/usr/lib/opkg/info/${pkgname}.list"); do
+			( [ -f "$i" ] && cd "$(dirname $i)" && . "$i" ) && rm -f "$i"
+		done
 		uci commit
 	fi
 
