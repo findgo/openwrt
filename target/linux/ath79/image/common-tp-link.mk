@@ -53,7 +53,7 @@ define Device/tplink
   LOADER_TYPE := gz
   KERNEL := kernel-bin | append-dtb | lzma
   KERNEL_INITRAMFS := kernel-bin | append-dtb | lzma | tplink-v1-header
-  IMAGES := sysupgrade.bin factory.bin
+  IMAGES += factory.bin
   IMAGE/sysupgrade.bin := append-rootfs | mktplinkfw sysupgrade | append-metadata
   IMAGE/factory.bin := append-rootfs | mktplinkfw factory
 endef
@@ -86,7 +86,7 @@ define Device/tplink-8m
 endef
 
 define Device/tplink-8mlzma
-$(Device/tplink)
+  $(Device/tplink)
   TPLINK_FLASHLAYOUT := 8Mlzma
   IMAGE_SIZE := 7936k
 endef
@@ -99,8 +99,9 @@ endef
 
 define Device/tplink-safeloader
   $(Device/tplink)
-  KERNEL := kernel-bin | append-dtb | lzma | tplink-v1-header
-  IMAGE/sysupgrade.bin := append-rootfs | tplink-safeloader sysupgrade | append-metadata
+  KERNEL := kernel-bin | append-dtb | lzma | tplink-v1-header -O
+  IMAGE/sysupgrade.bin := append-rootfs | tplink-safeloader sysupgrade | \
+    append-metadata | check-size $$$$(IMAGE_SIZE)
   IMAGE/factory.bin := append-rootfs | tplink-safeloader factory
 endef
 

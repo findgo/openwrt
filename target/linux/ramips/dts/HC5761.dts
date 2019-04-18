@@ -13,7 +13,7 @@
 		led-upgrade = &led_system;
 	};
 
-	gpio-leds {
+	leds {
 		compatible = "gpio-leds";
 
 		led_system: system {
@@ -36,6 +36,18 @@
 			gpios = <&gpio0 7 GPIO_ACTIVE_LOW>;
 		};
 	};
+};
+
+&ehci {
+	status = "okay";
+};
+
+&ohci {
+	status = "okay";
+};
+
+&pcie {
+	status = "okay";
 };
 
 &pcie0 {
